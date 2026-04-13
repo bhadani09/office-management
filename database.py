@@ -7,6 +7,9 @@ def get_db():
     db.row_factory = sqlite3.Row
     return db
 
+def hash_password(pw):
+    return hashlib.sha256(pw.encode()).hexdigest()
+
 def init_db():
     db = get_db()
     db.executescript("""
@@ -61,9 +64,9 @@ def init_db():
         );
     """)
 
-    # Default accounts
-    owner_pw = hashlib.md5('owner123'.encode()).hexdigest()
-    mgr_pw = hashlib.md5('mgr123'.encode()).hexdigest()
+    # Default accounts — SHA-256 hashing
+    owner_pw = hash_password('owner123')
+    mgr_pw   = hash_password('mgr123')
     db.execute("INSERT OR IGNORE INTO users (name,username,password,role,dept) VALUES (?,?,?,?,?)",
                ('Owner Sahab', 'owner', owner_pw, 'owner', 'Management'))
     db.execute("INSERT OR IGNORE INTO users (name,username,password,role,dept) VALUES (?,?,?,?,?)",
@@ -71,17 +74,20 @@ def init_db():
 
     # Default settings
     db.execute("INSERT OR IGNORE INTO settings (key,value) VALUES ('company_name','My Office')")
+    db.execute("INSERT OR IGNORE INTO settings (key,value) VALUES ('annual_leaves','12')")
 
     # Sample employees
     for e in [
-        ('Amit Kumar','Sales','Executive',25000,'2023-01-10','9876543210'),
-        ('Sunita Devi','Accounts','Accountant',22000,'2023-03-15','9876543211'),
-        ('Ravi Verma','IT','Developer',30000,'2022-11-01','9876543212'),
-        ('Pooja Yadav','HR','HR Executive',20000,'2024-01-05','9876543213'),
-        ('Deepak Jha','Sales','Sr. Executive',23000,'2023-06-20','9876543214'),
-        ('Kavita Mishra','Admin','Admin Assistant',18000,'2023-09-12','9876543215'),
+        ('Amit Kumar',   'Sales',    'Executive',       25000, '2023-01-10', '9876543210'),
+        ('Sunita Devi',  'Accounts', 'Accountant',      22000, '2023-03-15', '9876543211'),
+        ('Ravi Verma',   'IT',       'Developer',       30000, '2022-11-01', '9876543212'),
+        ('Pooja Yadav',  'HR',       'HR Executive',    20000, '2024-01-05', '9876543213'),
+        ('Deepak Jha',   'Sales',    'Sr. Executive',   23000, '2023-06-20', '9876543214'),
+        ('Kavita Mishra','Admin',    'Admin Assistant', 18000, '2023-09-12', '9876543215'),
     ]:
-        db.execute("INSERT OR IGNORE INTO employees (name,dept,designation,salary,join_date,phone) VALUES (?,?,?,?,?,?)", e)
+        db.execute(
+            "INSERT OR IGNORE INTO employees (name,dept,designation,salary,join_date,phone) VALUES (?,?,?,?,?,?)", e
+        )
 
     db.commit()
     db.close()
