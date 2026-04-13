@@ -1,0 +1,685 @@
+<!DOCTYPE html>
+<html lang="hi">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1.0"/>
+<title>Office HR System</title>
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet"/>
+<style>
+:root{--bg:#f0f2f7;--sur:#fff;--sur2:#f7f8fc;--bdr:#e2e6f0;--pri:#2563eb;--pril:#dbeafe;--prid:#1d4ed8;--tx:#1e293b;--tx2:#64748b;--tx3:#94a3b8;--ok:#16a34a;--okbg:#dcfce7;--er:#dc2626;--erbg:#fee2e2;--wa:#d97706;--wabg:#fef3c7;--in:#0284c7;--inbg:#e0f2fe;--pu:#7c3aed;--pubg:#ede9fe;--r:10px;--rl:14px}
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:'Poppins',sans-serif;background:var(--bg);color:var(--tx);font-size:14px;min-height:100vh}
+.hide{display:none!important}
+
+/* LOGIN */
+.lwrap{min-height:100vh;display:flex;align-items:center;justify-content:center;background:linear-gradient(135deg,#1e3a8a,#2563eb,#0891b2);padding:1rem}
+.lbox{background:#fff;border-radius:20px;padding:2.5rem;width:100%;max-width:420px;box-shadow:0 20px 60px rgba(0,0,0,.2)}
+.llogo{text-align:center;margin-bottom:2rem}
+.lico{width:64px;height:64px;background:var(--pri);border-radius:18px;display:flex;align-items:center;justify-content:center;margin:0 auto 12px;font-size:30px}
+.llogo h1{font-size:22px;font-weight:700}.llogo p{font-size:13px;color:var(--tx2);margin-top:4px}
+.rtabs{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:1.5rem}
+.rtab{padding:14px;border-radius:var(--r);border:2px solid var(--bdr);cursor:pointer;text-align:center;transition:.2s;background:var(--sur2)}
+.rtab.on{border-color:var(--pri);background:var(--pril)}
+.rtab .rt{font-weight:600;font-size:14px}.rtab.on .rt{color:var(--pri)}
+.rtab .rs{font-size:11px;color:var(--tx3);margin-top:2px}.rtab.on .rs{color:var(--pri)}
+.fg{margin-bottom:14px}
+.fg label{display:block;font-size:12px;font-weight:500;color:var(--tx2);margin-bottom:5px}
+.fg input,.fg select{width:100%;padding:10px 14px;border:1.5px solid var(--bdr);border-radius:var(--r);font-size:14px;font-family:'Poppins',sans-serif;outline:none;transition:.2s;background:#fff;color:var(--tx)}
+.fg input:focus,.fg select:focus{border-color:var(--pri)}
+.lbtn{width:100%;padding:12px;background:var(--pri);color:#fff;border:none;border-radius:var(--r);font-size:15px;font-weight:600;cursor:pointer;font-family:'Poppins',sans-serif;transition:.2s;margin-top:4px}
+.lbtn:hover{background:var(--prid)}
+.lhint{font-size:11px;color:var(--tx3);text-align:center;margin-top:14px;background:var(--sur2);padding:8px;border-radius:var(--r)}
+
+/* APP */
+.app{display:flex;min-height:100vh}
+.sb{width:240px;background:#1e293b;min-height:100vh;display:flex;flex-direction:column;flex-shrink:0}
+.sb-hdr{padding:1.5rem 1.25rem 1rem;border-bottom:1px solid #334155}
+.sb-hdr h2{font-size:15px;font-weight:700;color:#fff}
+.sb-hdr p{font-size:11px;color:#94a3b8;margin-top:2px}
+.ub{display:flex;align-items:center;gap:10px;padding:1rem 1.25rem;border-bottom:1px solid #334155}
+.uav{width:36px;height:36px;border-radius:50%;background:var(--pri);display:flex;align-items:center;justify-content:center;font-size:13px;font-weight:700;color:#fff;flex-shrink:0}
+.unm{font-size:13px;font-weight:600;color:#fff}.url{font-size:11px;color:#94a3b8}
+.nav{padding:10px 0;flex:1}
+.ni{display:flex;align-items:center;gap:10px;padding:10px 1.25rem;cursor:pointer;color:#94a3b8;font-size:13px;font-weight:500;transition:.15s;border-left:3px solid transparent}
+.ni:hover{background:#334155;color:#fff}
+.ni.on{background:#2563eb22;color:#60a5fa;border-left-color:#3b82f6}
+.ni .ico{font-size:17px}
+.sbf{padding:1rem 1.25rem;border-top:1px solid #334155}
+.lout{width:100%;padding:8px;background:#dc262622;color:#fca5a5;border:1px solid #dc262644;border-radius:var(--r);font-size:13px;cursor:pointer;font-family:'Poppins',sans-serif;transition:.2s}
+.lout:hover{background:#dc2626;color:#fff}
+.mc{flex:1;padding:1.5rem;overflow-x:hidden;min-width:0}
+
+/* TOAST */
+.toast{position:fixed;top:20px;right:20px;padding:12px 20px;border-radius:var(--r);font-size:13px;font-weight:500;z-index:9999;max-width:320px;box-shadow:0 4px 20px rgba(0,0,0,.15)}
+.t-ok{background:var(--okbg);color:var(--ok);border:1px solid #86efac}
+.t-er{background:var(--erbg);color:var(--er);border:1px solid #fca5a5}
+.t-in{background:var(--inbg);color:var(--in);border:1px solid #7dd3fc}
+.t-wa{background:var(--wabg);color:var(--wa);border:1px solid #fcd34d}
+
+/* PAGE */
+.phdr{margin-bottom:1.5rem}
+.phdr h1{font-size:22px;font-weight:700}
+.phdr p{font-size:13px;color:var(--tx2);margin-top:2px}
+.card{background:#fff;border-radius:var(--rl);border:1px solid var(--bdr);padding:1.25rem;margin-bottom:1rem;box-shadow:0 1px 3px rgba(0,0,0,.07)}
+.ctitle{font-size:14px;font-weight:600;margin-bottom:1rem}
+.sgrid{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin-bottom:1.25rem}
+.sc{background:#fff;border-radius:var(--rl);padding:1rem 1.25rem;border:1px solid var(--bdr);box-shadow:0 1px 3px rgba(0,0,0,.07)}
+.sl{font-size:11px;color:var(--tx2);font-weight:500;text-transform:uppercase;letter-spacing:.5px}
+.sn{font-size:26px;font-weight:700;margin-top:4px}
+.ss{font-size:11px;color:var(--tx3);margin-top:2px}
+.tw{overflow-x:auto;border-radius:var(--rl);border:1px solid var(--bdr);background:#fff;box-shadow:0 1px 3px rgba(0,0,0,.07);margin-bottom:1rem}
+table{width:100%;border-collapse:collapse}
+th{font-size:11px;font-weight:600;color:var(--tx2);text-transform:uppercase;letter-spacing:.4px;padding:10px 14px;background:var(--sur2);border-bottom:1px solid var(--bdr);text-align:left;white-space:nowrap}
+td{padding:10px 14px;border-bottom:1px solid var(--bdr);font-size:13px;vertical-align:middle}
+tr:last-child td{border-bottom:none}
+tr:hover td{background:#f8faff}
+.bdg{display:inline-block;padding:3px 9px;border-radius:20px;font-size:11px;font-weight:600;white-space:nowrap}
+.bp{background:var(--okbg);color:var(--ok)}
+.ba{background:var(--erbg);color:var(--er)}
+.bh{background:var(--inbg);color:var(--in)}
+.bl{background:#fce7f3;color:#be185d}
+.bho{background:var(--pubg);color:var(--pu)}
+.bpn{background:var(--wabg);color:var(--wa)}
+.bap{background:var(--okbg);color:var(--ok)}
+.brj{background:var(--erbg);color:var(--er)}
+.bown{background:var(--wabg);color:var(--wa)}
+.bmgr{background:var(--inbg);color:var(--in)}
+.btn{padding:7px 14px;border-radius:var(--r);border:1px solid var(--bdr);background:#fff;color:var(--tx);font-size:13px;cursor:pointer;font-family:'Poppins',sans-serif;font-weight:500;transition:.15s}
+.btn:hover{background:var(--sur2)}
+.btp{background:var(--pri);color:#fff;border-color:var(--pri)}.btp:hover{background:var(--prid)}
+.bto{background:var(--okbg);color:var(--ok);border-color:#86efac}.bto:hover{background:#bbf7d0}
+.bte{background:var(--erbg);color:var(--er);border-color:#fca5a5}.bte:hover{background:#fecaca}
+.btw{background:var(--wabg);color:var(--wa);border-color:#fcd34d}.btw:hover{background:#fde68a}
+.btin{background:var(--inbg);color:var(--in);border-color:#7dd3fc}.btin:hover{background:#bae6fd}
+.sm{padding:5px 11px;font-size:12px}.xs{padding:3px 8px;font-size:11px}
+.fr{display:flex;align-items:center;gap:8px;flex-wrap:wrap}
+.fr2{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:12px}
+.fr3{display:grid;grid-template-columns:1fr 1fr 1fr;gap:12px;margin-bottom:12px}
+.cr{display:flex;gap:5px;flex-wrap:wrap}
+.ch{padding:4px 11px;border-radius:20px;border:1px solid var(--bdr);background:var(--sur2);font-size:11px;cursor:pointer;color:var(--tx2);transition:.15s;font-weight:500}
+.ch:hover{border-color:var(--pri);color:var(--pri)}
+.ch.P.on{background:var(--okbg);color:var(--ok);border-color:#86efac}
+.ch.H.on{background:var(--inbg);color:var(--in);border-color:#7dd3fc}
+.ch.L.on{background:#fce7f3;color:#be185d;border-color:#f9a8d4}
+.ch.HO.on{background:var(--pubg);color:var(--pu);border-color:#c4b5fd}
+.sbar{display:flex;align-items:center;justify-content:space-between;margin-bottom:1rem;flex-wrap:wrap;gap:8px}
+.av{width:28px;height:28px;border-radius:50%;background:var(--pri);display:flex;align-items:center;justify-content:center;font-size:10px;font-weight:700;color:#fff;flex-shrink:0}
+.es{text-align:center;padding:3rem;color:var(--tx3)}
+.es .ei{font-size:40px;margin-bottom:10px}
+.inote{font-size:12px;color:var(--tx3);margin-top:8px;padding:8px 12px;background:var(--sur2);border-radius:var(--r);border:1px solid var(--bdr)}
+.hban{background:linear-gradient(90deg,var(--pubg),#fce7f3);border:1px solid #ddd6fe;border-radius:var(--r);padding:10px 14px;font-size:13px;color:var(--pu);font-weight:500;margin-bottom:10px}
+.trow{display:flex;align-items:center;justify-content:space-between;padding:8px 12px;border-radius:var(--r);border:1px solid var(--bdr);background:#fff;margin-bottom:6px}
+.load{text-align:center;padding:3rem;color:var(--tx3);font-size:13px}
+.g24{display:grid;grid-template-columns:repeat(2,1fr);gap:12px;margin-bottom:1rem}
+.pdf-btn{display:inline-flex;align-items:center;gap:6px;padding:6px 14px;border-radius:var(--r);border:1px solid #86efac;background:var(--okbg);color:var(--ok);font-size:12px;font-weight:600;cursor:pointer;font-family:'Poppins',sans-serif;transition:.15s;text-decoration:none}
+.pdf-btn:hover{background:#bbf7d0}
+@media(max-width:900px){.sgrid{grid-template-columns:repeat(2,1fr)}.sb{width:200px}}
+@media(max-width:640px){.app{flex-direction:column}.sb{width:100%;min-height:auto}.sgrid{grid-template-columns:repeat(2,1fr)}.fr2,.fr3{grid-template-columns:1fr}}
+</style>
+</head>
+<body>
+
+<div id="lp">
+<div class="lwrap"><div class="lbox">
+  <div class="llogo">
+    <div class="lico">🏢</div>
+    <h1>Office HR System</h1>
+    <p>Attendance, Salary &amp; Leave Management</p>
+  </div>
+  <div class="rtabs">
+    <div class="rtab on" id="t-own" onclick="setRole('owner')">
+      <div style="font-size:24px;margin-bottom:4px">👑</div>
+      <div class="rt">Owner</div><div class="rs">Full access</div>
+    </div>
+    <div class="rtab" id="t-mgr" onclick="setRole('manager')">
+      <div style="font-size:24px;margin-bottom:4px">💼</div>
+      <div class="rt">Manager</div><div class="rs">Attendance &amp; Reports</div>
+    </div>
+  </div>
+  <div class="fg"><label>Username</label><input id="lu" placeholder="Username dalein"/></div>
+  <div class="fg"><label>Password</label><input id="lp2" type="password" placeholder="Password" onkeydown="if(event.key==='Enter')doLogin()"/></div>
+  <button class="lbtn" onclick="doLogin()">Login Karein</button>
+</div></div>
+</div>
+
+<div id="ap" class="hide">
+<div class="app">
+  <div class="sb">
+    <div class="sb-hdr"><h2>Office HR System</h2><p id="tdate"></p></div>
+    <div class="ub">
+      <div class="uav" id="uav">U</div>
+      <div><div class="unm" id="unm">User</div><div class="url" id="url">Role</div></div>
+    </div>
+    <div class="nav" id="nav"></div>
+    <div class="sbf"><button class="lout" onclick="doLogout()">Logout</button></div>
+  </div>
+  <div class="mc" id="mc"><div class="load">Loading...</div></div>
+</div>
+</div>
+
+<script>
+let USER=null, ROLE='owner', PAGE='dashboard';
+
+function today(){return new Date().toISOString().split('T')[0]}
+function fmt(n){return Number(n).toLocaleString('en-IN')}
+function mname(ym){const ms=['','January','February','March','April','May','June','July','August','September','October','November','December'];const[y,m]=ym.split('-');return ms[+m]+' '+y}
+
+function toast(msg,t='in'){
+  document.querySelectorAll('.toast').forEach(e=>e.remove());
+  const d=document.createElement('div');
+  d.className=`toast t-${t}`;d.textContent=msg;document.body.appendChild(d);
+  setTimeout(()=>d.remove(),3500);
+}
+
+async function api(path,method='GET',body=null){
+  const o={method,headers:{'Content-Type':'application/json'},credentials:'include'};
+  if(body) o.body=JSON.stringify(body);
+  const r=await fetch('/api'+path,o);
+  return r.json();
+}
+
+function setRole(r){
+  ROLE=r;
+  document.getElementById('t-own').classList.toggle('on',r==='owner');
+  document.getElementById('t-mgr').classList.toggle('on',r==='manager');
+}
+
+async function doLogin(){
+  const u=document.getElementById('lu').value.trim();
+  const p=document.getElementById('lp2').value.trim();
+  if(!u||!p){toast('Username aur password zaroor bharein!','er');return}
+  const res=await api('/login','POST',{username:u,password:p,role:ROLE});
+  if(res.ok){USER=res.user;initApp()}
+  else toast(res.msg||'Login failed!','er');
+}
+
+async function doLogout(){
+  await api('/logout','POST');USER=null;
+  document.getElementById('lp').classList.remove('hide');
+  document.getElementById('ap').classList.add('hide');
+}
+
+async function checkSession(){
+  const r=await api('/me');
+  if(r.ok){USER=r.user;initApp()}
+}
+
+function initApp(){
+  document.getElementById('lp').classList.add('hide');
+  document.getElementById('ap').classList.remove('hide');
+  const ini=USER.name.split(' ').map(x=>x[0]).join('').slice(0,2).toUpperCase();
+  document.getElementById('uav').textContent=ini;
+  document.getElementById('unm').textContent=USER.name;
+  document.getElementById('url').textContent=USER.role==='owner'?'Owner':'Manager';
+  document.getElementById('tdate').textContent=today();
+  buildNav();loadPage('dashboard');
+}
+
+const NAVS=[
+  {id:'dashboard',lbl:'Dashboard',ico:'📊',roles:['owner','manager']},
+  {id:'attendance',lbl:'Attendance',ico:'✅',roles:['owner','manager']},
+  {id:'employees',lbl:'Employees',ico:'👥',roles:['owner','manager']},
+  {id:'leaves',lbl:'Leaves',ico:'🌿',roles:['owner','manager']},
+  {id:'salary',lbl:'Salary',ico:'💰',roles:['owner','manager']},
+  {id:'holidays',lbl:'Holidays',ico:'🎉',roles:['owner','manager']},
+  {id:'settings',lbl:'Settings',ico:'⚙️',roles:['owner']},
+];
+
+function buildNav(){
+  document.getElementById('nav').innerHTML=NAVS.filter(n=>n.roles.includes(USER.role))
+    .map(n=>`<div class="ni" id="n-${n.id}" onclick="loadPage('${n.id}')"><span class="ico">${n.ico}</span><span>${n.lbl}</span></div>`).join('');
+}
+
+function loadPage(pg){
+  PAGE=pg;
+  document.querySelectorAll('.ni').forEach(e=>e.classList.remove('on'));
+  const el=document.getElementById('n-'+pg);
+  if(el) el.classList.add('on');
+  document.getElementById('mc').innerHTML='<div class="load">Loading...</div>';
+  ({dashboard:pgDash,attendance:pgAtt,employees:pgEmp,leaves:pgLeave,salary:pgSal,holidays:pgHol,settings:pgSet})[pg]?.();
+}
+
+// ── DASHBOARD ──────────────────────────────────────
+async function pgDash(){
+  const[emps,att,leaves,hols]=await Promise.all([api('/employees'),api('/attendance?date='+today()),api('/leaves'),api('/holidays')]);
+  const td=today(),ym=td.slice(0,7);
+  const isHol=hols.some(h=>h.date===td);
+  const holName=isHol?(hols.find(h=>h.date===td)||{}).name:'';
+  let P=0,H=0,L=0,A=0;
+  emps.forEach(e=>{
+    const s=(att.find(x=>x.emp_id===e.id)||{}).status||'absent';
+    if(s==='present')P++;else if(s==='halfday')H++;else if(s==='leave')L++;else A++;
+  });
+  const pending=leaves.filter(l=>l.status==='pending').length;
+  const wdays=calcWD(ym,hols.map(h=>h.date));
+  document.getElementById('mc').innerHTML=`
+<div class="phdr"><h1>Dashboard</h1><p>Aaj ka overview — ${td}</p></div>
+${isHol?`<div class="hban">🎉 Aaj Holiday hai — ${holName}. Working days mein count nahi hoga.</div>`:''}
+<div class="sgrid">
+  <div class="sc"><div class="sl">Total Employees</div><div class="sn" style="color:var(--pri)">${emps.length}</div></div>
+  <div class="sc"><div class="sl">Aaj Present</div><div class="sn" style="color:var(--ok)">${P}</div></div>
+  <div class="sc"><div class="sl">Aaj Absent</div><div class="sn" style="color:var(--er)">${A}</div></div>
+  <div class="sc"><div class="sl">Half Day</div><div class="sn" style="color:var(--wa)">${H}</div></div>
+</div>
+<div class="g24">
+  <div class="card"><div class="ctitle">Is mahine ke working days</div><div style="font-size:32px;font-weight:700;color:var(--pri)">${wdays}</div><div style="font-size:12px;color:var(--tx3);margin-top:4px">Holidays &amp; Sundays kat ke</div></div>
+  <div class="card"><div class="ctitle">Pending Leave Approvals</div><div style="font-size:32px;font-weight:700;color:#be185d">${pending}</div><div style="font-size:12px;color:var(--tx3);margin-top:4px">${pending>0?'Approval chahiye':'Koi pending nahi'}</div></div>
+</div>
+<div class="card">
+  <div class="sbar"><div class="ctitle" style="margin:0">Aaj ki Attendance</div><button class="btn btp sm" onclick="loadPage('attendance')">Mark Karein</button></div>
+  <div class="tw" style="margin-top:8px"><table>
+    <tr><th>Employee</th><th>Department</th><th>Status</th></tr>
+    ${emps.map(e=>{const s=(att.find(x=>x.emp_id===e.id)||{}).status||'absent';return`<tr><td><div class="fr"><div class="av">${e.name[0]}</div><span style="font-weight:500">${e.name}</span></div></td><td style="color:var(--tx2)">${e.dept}</td><td><span class="bdg ${s==='present'?'bp':s==='halfday'?'bh':s==='leave'?'bl':s==='holiday'?'bho':'ba'}">${slbl(s)}</span></td></tr>`;}).join('')}
+  </table></div>
+</div>`;
+}
+
+function calcWD(ym,hols){
+  const[y,m]=ym.split('-').map(Number);
+  const days=new Date(y,m,0).getDate();
+  let c=0;
+  for(let d=1;d<=days;d++){
+    const ds=`${ym}-${String(d).padStart(2,'0')}`;
+    if(new Date(y,m-1,d).getDay()!==0&&!hols.includes(ds)) c++;
+  }
+  return c;
+}
+
+function slbl(s){return s==='present'?'Present':s==='halfday'?'Half Day':s==='leave'?'Leave':s==='holiday'?'Holiday':'Absent'}
+
+// ── ATTENDANCE ─────────────────────────────────────
+let ATD=today();
+async function pgAtt(){
+  const[emps,att,hols]=await Promise.all([api('/employees'),api('/attendance?date='+ATD),api('/holidays')]);
+  const isHol=hols.some(h=>h.date===ATD);
+  const isSun=new Date(ATD).getDay()===0;
+  const holName=isHol?(hols.find(h=>h.date===ATD)||{}).name:'';
+  const attMap={};att.forEach(a=>attMap[a.emp_id]=a.status);
+
+  document.getElementById('mc').innerHTML=`
+<div class="phdr"><h1>Attendance</h1><p>Daily attendance marking</p></div>
+<div class="card">
+  <div class="fr" style="margin-bottom:10px;flex-wrap:wrap;gap:8px">
+    <div class="fg" style="width:180px;margin:0"><label>Date</label><input type="date" value="${ATD}" onchange="ATD=this.value;pgAtt()"/></div>
+    <button class="btn bto sm" onclick="bulkMark('present')">✅ Sab Present</button>
+    <button class="btn bte sm" onclick="bulkMark('absent')">❌ Sab Absent</button>
+    ${USER.role==='owner'?`<button class="btn btw sm" onclick="toggleHol('${ATD}',${isHol},'${holName}')">${isHol?'🔄 Holiday Hatao':'🎉 Holiday Mark Karo'}</button>`:''}
+  </div>
+  ${isHol?`<div style="background:var(--pubg);border:1px solid #ddd6fe;border-radius:var(--r);padding:10px;font-size:13px;color:var(--pu);font-weight:500">🎉 Ye din Holiday hai (${holName}) — working days mein count nahi hoga.</div>`:''}
+  ${isSun?`<div style="background:var(--inbg);border:1px solid #7dd3fc;border-radius:var(--r);padding:10px;font-size:13px;color:var(--in)">🌞 Ye Sunday hai — automatically off rahega.</div>`:''}
+</div>
+<div class="tw"><table>
+  <tr><th style="width:30%">Employee</th><th style="width:18%">Dept</th><th>Status</th></tr>
+  ${emps.map(e=>{
+    const s=attMap[e.id]||'absent';
+    return`<tr>
+      <td><div class="fr"><div class="av">${e.name[0]}</div><span style="font-weight:500;font-size:13px">${e.name}</span></div></td>
+      <td style="color:var(--tx2);font-size:12px">${e.dept}</td>
+      <td><div class="cr">
+        ${['present','halfday','leave','holiday'].map(opt=>`<span class="ch ${opt==='present'?'P':opt==='halfday'?'H':opt==='leave'?'L':'HO'} ${s===opt?'on':''}" onclick="markOne(${e.id},'${opt}',this)">${slbl(opt)}</span>`).join('')}
+        <span class="ch ba ${s==='absent'?'on':''}" style="${s==='absent'?'background:var(--erbg);color:var(--er);border-color:#fca5a5':''}" onclick="markOne(${e.id},'absent',this)">Absent</span>
+      </div></td>
+    </tr>`;
+  }).join('')}
+</table></div>
+<div class="inote">💡 Half day salary cut ke liye Salary page par jayen — sirf Owner toggle kar sakta hai.</div>`;
+}
+
+async function markOne(eid,status,el){
+  el.closest('tr').querySelectorAll('.ch').forEach(c=>{c.classList.remove('on');c.style.background='';c.style.color='';c.style.borderColor='';});
+  el.classList.add('on');
+  await api('/attendance','POST',{emp_id:eid,date:ATD,status});
+}
+
+async function bulkMark(s){
+  await api('/attendance/bulk','POST',{date:ATD,status:s});
+  toast(`Sab ${slbl(s)} mark ho gaye!`,'ok');pgAtt();
+}
+
+async function toggleHol(date,isHol,name){
+  if(isHol){await api('/holidays/'+date,'DELETE');toast('Holiday hata diya gaya','in');}
+  else{const n=prompt('Holiday ka naam dalein:')||'Holiday';await api('/holidays','POST',{date,name:n});toast(`${n} add ho gaya!`,'ok');}
+  pgAtt();
+}
+
+// ── EMPLOYEES ──────────────────────────────────────
+async function pgEmp(){
+  const emps=await api('/employees');
+  const isO=USER.role==='owner';
+  document.getElementById('mc').innerHTML=`
+<div class="phdr"><h1>Employees</h1><p>${emps.length} employees registered</p></div>
+${isO?`<div style="text-align:right;margin-bottom:12px"><button class="btn btp" onclick="showEmpForm()">+ Employee Add Karo</button></div>`:''}
+<div id="ef"></div>
+<div class="tw"><table>
+  <tr><th>#</th><th>Naam</th><th>Dept</th><th>Designation</th><th>Basic Salary</th><th>Phone</th><th>Joining</th>${isO?'<th>Action</th>':''}</tr>
+  ${emps.map((e,i)=>`<tr>
+    <td style="color:var(--tx3)">${i+1}</td>
+    <td><div class="fr"><div class="av">${e.name[0]}</div><span style="font-weight:500">${e.name}</span></div></td>
+    <td><span class="bdg btin">${e.dept||'—'}</span></td>
+    <td style="color:var(--tx2);font-size:12px">${e.designation||'—'}</td>
+    <td style="font-weight:600">Rs. ${fmt(e.salary)}</td>
+    <td style="color:var(--tx2)">${e.phone||'—'}</td>
+    <td style="color:var(--tx2);font-size:12px">${e.join_date||'—'}</td>
+    ${isO?`<td class="fr">
+      <button class="btn btw xs" onclick="showEditForm(${e.id},'${e.name}','${e.dept}','${e.designation}',${e.salary},'${e.phone}')">✏️ Edit</button>
+      <button class="btn bte xs" onclick="delEmp(${e.id},'${e.name}')">🗑️</button>
+    </td>`:''}
+  </tr>`).join('')}
+</table></div>`;
+}
+
+function showEmpForm(id,name,dept,desig,sal,phone){
+  const isEdit=!!id;
+  document.getElementById('ef').innerHTML=`
+<div class="card" style="border:2px solid var(--pril);margin-bottom:1rem">
+  <div class="ctitle">${isEdit?'Employee Edit Karo':'Naya Employee'}</div>
+  <div class="fr2">
+    <div class="fg"><label>Poora Naam *</label><input id="en" value="${name||''}" placeholder="Ramesh Kumar"/></div>
+    <div class="fg"><label>Department</label><input id="ed" value="${dept||''}" placeholder="Sales, IT..."/></div>
+    <div class="fg"><label>Designation</label><input id="ede" value="${desig||''}" placeholder="Executive..."/></div>
+    <div class="fg"><label>Basic Salary (Rs.) *</label><input id="es" type="number" value="${sal||''}" placeholder="25000"/></div>
+    <div class="fg"><label>Phone</label><input id="ep" value="${phone||''}" placeholder="9876543210"/></div>
+    ${!isEdit?`<div class="fg"><label>Joining Date</label><input id="ej" type="date" value="${today()}"/></div>`:''}
+  </div>
+  <div class="fr" style="margin-top:8px">
+    <button class="btn btp" onclick="${isEdit?`submitEdit(${id})`:'submitEmp()'}">${isEdit?'Update Karo':'Save Karo'}</button>
+    <button class="btn" onclick="document.getElementById('ef').innerHTML=''">Cancel</button>
+  </div>
+</div>`;
+}
+
+function showEditForm(id,name,dept,desig,sal,phone){showEmpForm(id,name,dept,desig,sal,phone);}
+
+async function submitEmp(){
+  const name=document.getElementById('en').value.trim();
+  const sal=parseInt(document.getElementById('es').value)||0;
+  if(!name||!sal){toast('Naam aur salary zaroor bharein!','er');return}
+  const res=await api('/employees','POST',{name,dept:document.getElementById('ed').value.trim(),designation:document.getElementById('ede').value.trim(),salary:sal,join_date:document.getElementById('ej').value,phone:document.getElementById('ep').value.trim()});
+  if(res.ok){toast(res.msg,'ok');pgEmp()}
+}
+
+async function submitEdit(id){
+  const name=document.getElementById('en').value.trim();
+  const sal=parseInt(document.getElementById('es').value)||0;
+  if(!name||!sal){toast('Naam aur salary zaroor bharein!','er');return}
+  const res=await api('/employees/'+id,'PUT',{name,dept:document.getElementById('ed').value.trim(),designation:document.getElementById('ede').value.trim(),salary:sal,phone:document.getElementById('ep').value.trim()});
+  if(res.ok){toast(res.msg,'ok');pgEmp()}
+}
+
+async function delEmp(id,name){
+  if(!confirm(`${name} ko delete karna chahte hain?`))return;
+  await api('/employees/'+id,'DELETE');
+  toast(`${name} hata diya gaya`,'in');pgEmp();
+}
+
+// ── LEAVES ─────────────────────────────────────────
+async function pgLeave(){
+  const[emps,leaves,bal]=await Promise.all([api('/employees'),api('/leaves'),api('/leave_balance')]);
+  const isO=USER.role==='owner';
+  const balMap={};bal.forEach(b=>balMap[b.emp_id]=b);
+
+  document.getElementById('mc').innerHTML=`
+<div class="phdr"><h1>Leave Management</h1><p>Leave apply, approve aur reject</p></div>
+<div style="text-align:right;margin-bottom:12px"><button class="btn btp" onclick="showLvForm(${JSON.stringify(emps).replace(/"/g,'&quot;')})">+ Leave Apply Karein</button></div>
+<div id="lf"></div>
+<div class="card">
+  <div class="ctitle">Leave Balance (Annual: 12 days)</div>
+  <div class="tw" style="margin:0"><table>
+    <tr><th>Employee</th><th>Department</th><th style="text-align:center">Total</th><th style="text-align:center">Used</th><th style="text-align:center">Remaining</th></tr>
+    ${bal.map(b=>`<tr>
+      <td style="font-weight:500">${b.name}</td>
+      <td style="color:var(--tx2)">${b.dept}</td>
+      <td style="text-align:center">${b.allotted}</td>
+      <td style="text-align:center"><span class="bdg bl">${b.used}</span></td>
+      <td style="text-align:center"><span class="bdg ${b.remaining>0?'bap':'ba'}">${b.remaining}</span></td>
+    </tr>`).join('')}
+  </table></div>
+</div>
+${leaves.length===0?`<div class="card"><div class="es"><div class="ei">🌿</div><p>Koi leave application nahi</p></div></div>`:`
+<div class="ctitle" style="margin-bottom:8px">Leave Applications</div>
+<div class="tw"><table>
+  <tr><th>Employee</th><th>Type</th><th>From</th><th>To</th><th>Reason</th><th>Status</th>${isO?'<th>Action</th>':''}</tr>
+  ${leaves.map((l,i)=>`<tr>
+    <td style="font-weight:500">${l.emp_name}</td>
+    <td style="font-size:12px;color:var(--tx2)">${l.leave_type}</td>
+    <td style="font-size:12px">${l.from_date}</td>
+    <td style="font-size:12px">${l.to_date}</td>
+    <td style="font-size:12px;color:var(--tx2);max-width:130px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">${l.reason||'—'}</td>
+    <td><span class="bdg ${l.status==='approved'?'bap':l.status==='rejected'?'brj':'bpn'}">${l.status==='approved'?'Approved':l.status==='rejected'?'Rejected':'Pending'}</span></td>
+    ${isO?`<td>${l.status==='pending'?`<button class="btn bto xs" onclick="updLeave(${l.id},'approved')" style="margin-right:3px">Approve</button><button class="btn bte xs" onclick="updLeave(${l.id},'rejected')">Reject</button>`:'—'}</td>`:''}
+  </tr>`).join('')}
+</table></div>`}`;
+}
+
+function showLvForm(emps){
+  document.getElementById('lf').innerHTML=`
+<div class="card" style="border:2px solid var(--pril);margin-bottom:1rem">
+  <div class="ctitle">Leave Application</div>
+  <div class="fr2">
+    <div class="fg"><label>Employee *</label><select id="le">${emps.map(e=>`<option value="${e.id}">${e.name} — ${e.dept}</option>`).join('')}</select></div>
+    <div class="fg"><label>Leave Type</label><select id="lt"><option>Sick Leave</option><option>Casual Leave</option><option>Earned Leave</option><option>Emergency Leave</option></select></div>
+    <div class="fg"><label>From Date *</label><input id="lfd" type="date" value="${today()}"/></div>
+    <div class="fg"><label>To Date *</label><input id="ltd" type="date" value="${today()}"/></div>
+  </div>
+  <div class="fg"><label>Reason</label><input id="lr" placeholder="Leave ka karan..."/></div>
+  <div class="fr" style="margin-top:10px">
+    <button class="btn btp" onclick="submitLv()">Apply Karo</button>
+    <button class="btn" onclick="document.getElementById('lf').innerHTML=''">Cancel</button>
+  </div>
+</div>`;
+}
+
+async function submitLv(){
+  const fd=document.getElementById('lfd').value,td2=document.getElementById('ltd').value;
+  if(!fd||!td2){toast('Dates zaroor bharein!','er');return}
+  const res=await api('/leaves','POST',{emp_id:document.getElementById('le').value,leave_type:document.getElementById('lt').value,from_date:fd,to_date:td2,reason:document.getElementById('lr').value});
+  if(res.ok){toast(res.msg,'in');pgLeave()}
+}
+
+async function updLeave(id,status){
+  const res=await api('/leaves/'+id,'PUT',{status});
+  toast(status==='approved'?'Leave approve ho gayi!':'Leave reject ho gayi.',status==='approved'?'ok':'er');
+  pgLeave();
+}
+
+// ── SALARY ─────────────────────────────────────────
+let SM=today().slice(0,7);
+async function pgSal(){
+  const res=await api('/salary?month='+SM);
+  if(!res.ok){document.getElementById('mc').innerHTML='<div class="load">Error!</div>';return}
+  const data=res.data,wdays=res.working_days,isO=USER.role==='owner';
+  const total=data.reduce((s,e)=>s+e.net,0);
+  document.getElementById('mc').innerHTML=`
+<div class="phdr"><h1>Salary Management</h1><p>Monthly salary calculation</p></div>
+<div class="fr" style="margin-bottom:1rem;flex-wrap:wrap;gap:10px">
+  <div class="fg" style="margin:0"><label>Month</label><input type="month" value="${SM}" onchange="SM=this.value;pgSal()" style="width:180px"/></div>
+  <div class="sc" style="min-width:150px"><div class="sl">Working Days</div><div class="sn" style="font-size:20px;color:var(--pri)">${wdays}</div></div>
+  <div class="sc" style="min-width:190px"><div class="sl">Total Payable</div><div class="sn" style="font-size:18px;color:var(--ok)">Rs. ${fmt(total)}</div></div>
+  <a class="pdf-btn" href="/api/monthly_report?month=${SM}" target="_blank">📊 Monthly Report PDF</a>
+</div>
+${isO?`<div class="card" style="background:var(--wabg);border:1px solid #fcd34d;margin-bottom:1rem">
+  <div class="ctitle">⚙️ Half Day Salary Cut (Sirf Owner)</div>
+  <p style="font-size:12px;color:var(--tx2);margin-bottom:10px">Default mein half day ka salary nahi katega. Agar cut karna hai toh yahan ON karein.</p>
+  <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(210px,1fr));gap:8px">
+    ${data.map(e=>`<div class="trow">
+      <div><div style="font-size:13px;font-weight:500">${e.name}</div><div style="font-size:11px;color:var(--tx3)">${e.dept}</div></div>
+      <button class="btn sm ${e.is_cut?'bte':'bto'}" onclick="toggleCut(${e.emp_id},${e.is_cut},'${SM}')">${e.is_cut?'Cut ON':'Cut OFF'}</button>
+    </div>`).join('')}
+  </div>
+</div>`:''}
+<div class="tw"><table>
+  <tr><th>Employee</th><th>Basic</th><th style="text-align:center">Present</th><th style="text-align:center">Half Day</th><th style="text-align:center">Leave</th><th style="text-align:center">Absent</th><th>Net Salary</th><th>Slip</th></tr>
+  ${data.map(e=>`<tr>
+    <td><div style="font-weight:500">${e.name}</div><div style="font-size:11px;color:var(--tx2)">${e.dept}</div>${e.is_cut?'<div style="font-size:10px;color:var(--er)">HD cut active</div>':''}</td>
+    <td>Rs. ${fmt(e.basic)}</td>
+    <td style="text-align:center"><span class="bdg bp">${e.present}</span></td>
+    <td style="text-align:center"><span class="bdg bh">${e.halfday}</span></td>
+    <td style="text-align:center"><span class="bdg bl">${e.leave}</span></td>
+    <td style="text-align:center"><span class="bdg ba">${e.absent}</span></td>
+    <td>
+      <div style="font-weight:700;color:var(--ok);font-size:15px">Rs. ${fmt(e.net)}</div>
+      ${e.total_deduct>0?`<div style="font-size:11px;color:var(--er)">- Rs. ${fmt(e.total_deduct)}</div>`:''}
+    </td>
+    <td><a class="pdf-btn" href="/api/salary_slip/${e.emp_id}?month=${SM}" target="_blank">📥 PDF</a></td>
+  </tr>`).join('')}
+  <tr style="background:var(--sur2)">
+    <td colspan="6" style="font-weight:600;text-align:right;padding-right:14px">Total Payable:</td>
+    <td style="font-weight:700;color:var(--ok);font-size:15px">Rs. ${fmt(total)}</td>
+    <td></td>
+  </tr>
+</table></div>
+<div class="inote">P=Present. Jo din mark nahi hua wo automatically Absent count hoga. Sundays aur Holidays salary mein count nahi honge.</div>`;
+}
+
+async function toggleCut(eid,isCut,month){
+  await api('/salary/cut','POST',{emp_id:eid,month,cut_active:isCut?0:1});
+  pgSal();
+}
+
+// ── HOLIDAYS ───────────────────────────────────────
+async function pgHol(){
+  const hols=await api('/holidays');
+  const isO=USER.role==='owner';
+  const days=['Sunday','Monday','Tuesday','Wednesday','Thursday','Friday','Saturday'];
+  document.getElementById('mc').innerHTML=`
+<div class="phdr"><h1>Holiday Calendar</h1><p>Office ke holidays — ye working days mein count nahi honge</p></div>
+<div class="card" style="background:var(--pubg);border:1px solid #ddd6fe">
+  <p style="font-size:13px;color:var(--pu);font-weight:500">⚠️ Yahan mark kiye holidays working days mein count NAHI honge — salary bhi nahi kategi.</p>
+</div>
+${isO?`<div style="text-align:right;margin-bottom:12px"><button class="btn btp" onclick="showHolForm()">+ Holiday Add Karo</button></div>`:''}
+<div id="hf"></div>
+${hols.length===0?`<div class="card"><div class="es"><div class="ei">🎉</div><p>Koi holiday set nahi</p></div></div>`:`
+<div class="tw"><table>
+  <tr><th>#</th><th>Date</th><th>Holiday Naam</th><th>Din</th>${isO?'<th>Hatao</th>':''}</tr>
+  ${hols.map((h,i)=>`<tr>
+    <td style="color:var(--tx3)">${i+1}</td>
+    <td style="font-weight:500">${h.date}</td>
+    <td><span class="bdg bho">${h.name}</span></td>
+    <td style="color:var(--tx2);font-size:12px">${days[new Date(h.date).getDay()]}</td>
+    ${isO?`<td><button class="btn bte xs" onclick="delHol('${h.date}','${h.name}')">Hatao</button></td>`:''}
+  </tr>`).join('')}
+</table></div>`}`;
+}
+
+function showHolForm(){
+  document.getElementById('hf').innerHTML=`
+<div class="card" style="border:2px solid var(--pril);margin-bottom:1rem">
+  <div class="ctitle">Naya Holiday</div>
+  <div class="fr2">
+    <div class="fg"><label>Date *</label><input id="hd" type="date" value="${today()}"/></div>
+    <div class="fg"><label>Holiday Naam *</label><input id="hn" placeholder="Diwali, Holi, Republic Day..."/></div>
+  </div>
+  <div class="fr" style="margin-top:8px">
+    <button class="btn btp" onclick="submitHol()">Add Karo</button>
+    <button class="btn" onclick="document.getElementById('hf').innerHTML=''">Cancel</button>
+  </div>
+</div>`;
+}
+
+async function submitHol(){
+  const date=document.getElementById('hd').value;
+  const name=document.getElementById('hn').value.trim()||'Holiday';
+  if(!date){toast('Date chunein!','er');return}
+  const res=await api('/holidays','POST',{date,name});
+  if(res.ok){toast(res.msg,'ok');pgHol()}
+}
+
+async function delHol(date,name){
+  await api('/holidays/'+date,'DELETE');
+  toast(`${name} hata diya gaya`,'in');pgHol();
+}
+
+// ── SETTINGS ───────────────────────────────────────
+async function pgSet(){
+  const[users,settings]=await Promise.all([api('/users'),api('/settings')]);
+  document.getElementById('mc').innerHTML=`
+<div class="phdr"><h1>Settings</h1><p>Company settings aur user management</p></div>
+<div class="card">
+  <div class="ctitle">Company Settings</div>
+  <div class="fg" style="max-width:400px"><label>Company / Office Naam (Salary Slip par dikhega)</label>
+    <input id="cname" value="${settings.company_name||'My Office'}" placeholder="Apna office naam dalein"/>
+  </div>
+  <button class="btn btp" onclick="saveSettings()">Save Karo</button>
+</div>
+<div class="card" style="border:2px solid #fcd34d">
+  <div class="ctitle">🔐 Apna Password Badlein</div>
+  <p style="font-size:12px;color:var(--tx2);margin-bottom:14px">Security ke liye apna login password yahan se badlein.</p>
+  <div class="fr2">
+    <div class="fg"><label>Purana Password *</label><input id="cp" type="password" placeholder="Purana password dalein"/></div>
+    <div class="fg"></div>
+    <div class="fg"><label>Naya Password *</label><input id="np" type="password" placeholder="Naya password dalein"/></div>
+    <div class="fg"><label>Naya Password Confirm *</label><input id="np2" type="password" placeholder="Dobara dalein"/></div>
+  </div>
+  <button class="btn btw" onclick="changePassword()">🔐 Password Badlo</button>
+</div>
+<div class="card">
+  <div class="ctitle">Manager Accounts</div>
+  ${users.filter(u=>u.role==='manager').map(u=>`
+  <div style="display:flex;align-items:center;justify-content:space-between;padding:10px 0;border-bottom:1px solid var(--bdr)">
+    <div class="fr"><div class="av">${u.name[0]}</div>
+      <div><div style="font-weight:500">${u.name}</div><div style="font-size:11px;color:var(--tx3)">@${u.username} — ${u.dept}</div></div>
+      <span class="bdg bmgr">Manager</span>
+    </div>
+    <button class="btn bte sm" onclick="delUser(${u.id},'${u.name}')">Hatao</button>
+  </div>`).join('')}
+  ${users.filter(u=>u.role==='manager').length===0?'<p style="color:var(--tx3);font-size:13px;padding:10px 0">Koi manager nahi.</p>':''}
+</div>
+<div class="card">
+  <div class="ctitle">Naya Manager Add Karo</div>
+  <div class="fr2">
+    <div class="fg"><label>Naam *</label><input id="mn" placeholder="Manager ka naam"/></div>
+    <div class="fg"><label>Username *</label><input id="mu" placeholder="Login ke liye"/></div>
+    <div class="fg"><label>Department</label><input id="md" placeholder="HR, Admin..."/></div>
+    <div class="fg"><label>Password *</label><input id="mp" type="password" placeholder="Password"/></div>
+  </div>
+  <button class="btn btp" onclick="addMgr()">Manager Add Karo</button>
+</div>`;
+}
+
+async function saveSettings(){
+  const name=document.getElementById('cname').value.trim();
+  if(!name){toast('Company naam zaroor dalein!','er');return}
+  const res=await api('/settings','POST',{company_name:name});
+  if(res.ok) toast(res.msg,'ok');
+}
+
+async function addMgr(){
+  const name=document.getElementById('mn').value.trim();
+  const username=document.getElementById('mu').value.trim();
+  const dept=document.getElementById('md').value.trim()||'General';
+  const password=document.getElementById('mp').value.trim();
+  if(!name||!username||!password){toast('Sab fields zaroor bharein!','er');return}
+  const res=await api('/users','POST',{name,username,password,role:'manager',dept});
+  if(res.ok){toast(res.msg,'ok');pgSet()}
+  else toast(res.msg||'Error!','er');
+}
+
+async function delUser(id,name){
+  if(!confirm(`${name} ka account delete karna hai?`))return;
+  const res=await api('/users/'+id,'DELETE');
+  if(res.ok){toast(`${name} hata diya gaya`,'in');pgSet()}
+  else toast(res.msg,'er');
+}
+
+async function changePassword(){
+  const cp=document.getElementById('cp').value;
+  const np=document.getElementById('np').value;
+  const np2=document.getElementById('np2').value;
+  if(!cp||!np||!np2){toast('Sab fields zaroor bharein!','er');return}
+  if(np!==np2){toast('Naya password aur confirm password match nahi kiya!','er');return}
+  if(np.length<4){toast('Naya password kam se kam 4 characters ka hona chahiye!','er');return}
+  const res=await api('/change_password','POST',{current_password:cp,new_password:np});
+  if(res.ok){
+    toast(res.msg,'ok');
+    document.getElementById('cp').value='';
+    document.getElementById('np').value='';
+    document.getElementById('np2').value='';
+  } else {
+    toast(res.msg||'Error!','er');
+  }
+}
+
+checkSession();
+</script>
+</body>
+</html>
