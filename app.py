@@ -9,7 +9,7 @@ app = Flask(__name__)
 # SECRET KEY: environment variable se lo, warna random generate karo
 app.secret_key = os.environ.get('SECRET_KEY') or os.urandom(32)
 CORS(app)
-
+init_db()
 # ─────────────────────────────────────────────
 # PASSWORD HASHING  (MD5 hatao, SHA-256 use karo)
 # ─────────────────────────────────────────────
